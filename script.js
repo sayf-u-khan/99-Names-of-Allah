@@ -1,19 +1,15 @@
-// script.js
-
 // --- 1. DOM Element References ---
-// Let's get all the HTML elements we need to work with, like grabbing our paintbrushes!
 const questionTextElement = document.getElementById('question-text');
 const transliterationTextElement = document.getElementById('transliteration-text');
 const optionsAreaElement = document.getElementById('options-area');
 const feedbackTextElement = document.getElementById('feedback-text');
 const hintButtonElement = document.getElementById('hint-btn');
 const nextQuestionButtonElement = document.getElementById('next-question-btn');
-// Add progress and score display elements
 const progressTextElement = document.getElementById('progress-text');
 const scoreTextElement = document.getElementById('score-text');
 
 
-// --- 2. The Data (As discussed, you'll populate this!) ---
+// --- 2. The Data ---
 const anNamesOfAllah = [
     { id: 1, arabic: "الرَّحْمَنُ", transliteration: "Ar-Rahman", meaning: "The Beneficent" },
     { id: 2, arabic: "الرَّحِيمُ", transliteration: "Ar-Raheem", meaning: "The Merciful" },
@@ -117,16 +113,14 @@ const anNamesOfAllah = [
 ];
 
 // --- 3. Quiz State Variables ---
-// These will keep track of our current situation in the quiz.
-let currentQuestionDetails = {}; // Stores details about the question currently displayed
-let score = 0; // If you want to implement scoring later
+let currentQuestionDetails = {};
 let hintUsed = false;
 let availableNames = [...anNamesOfAllah]; // A copy of names to pick from, allows for non-repeating questions until list exhausted.
 let questionCount = 0;
 const maxQuestions = 20;
+let score = 0;
 
 // --- 4. Start Game Function ---
-// This function kicks everything off!
 function startGame() {
     if (anNamesOfAllah.length < 4) {
         questionTextElement.textContent = "Not enough names data to start the quiz. Please add more names!";
@@ -147,7 +141,6 @@ function startGame() {
 }
 
 // --- 5. Generate Question Function ---
-// The heart of the quiz – decides what to ask!
 function generateQuestion() {
     if (questionCount >= maxQuestions || availableNames.length === 0) {
         showFinalScore();
@@ -201,7 +194,7 @@ function generateQuestion() {
     updateProgressAndScore();
 }
 
-// --- New: Update Progress and Score Display ---
+// --- 6. Update Progress and Score Display ---
 function updateProgressAndScore() {
     if (progressTextElement) {
         progressTextElement.textContent = `Question ${questionCount} of ${maxQuestions}`;
@@ -211,7 +204,7 @@ function updateProgressAndScore() {
     }
 }
 
-// --- New: Show Final Score ---
+// --- 7. Show Final Score ---
 function showFinalScore() {
     questionTextElement.textContent = `Quiz Complete! Your final score: ${score} out of ${maxQuestions}`;
     transliterationTextElement.textContent = "";
@@ -224,8 +217,7 @@ function showFinalScore() {
     nextQuestionButtonElement.onclick = () => location.reload();
 }
 
-// --- 6. Generate Options Function ---
-// Creates a list of choices, with one correct answer and some distractors.
+// --- 8. Generate Options Function ---
 function generateOptions(correctAnswer, type) {
     let choices = [correctAnswer];
     let distractors = [];
@@ -248,10 +240,6 @@ function generateOptions(correctAnswer, type) {
         }
     }
     
-    // If not enough unique names to generate 3 distractors (e.g., less than 4 names total)
-    // We might have fewer than 4 options. That's okay for a start.
-
-    // Shuffle the choices (Fisher-Yates shuffle algorithm - a classic, senpai!)
     for (let i = choices.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [choices[i], choices[j]] = [choices[j], choices[i]]; // Swap!
@@ -259,18 +247,14 @@ function generateOptions(correctAnswer, type) {
     return choices;
 }
 
-// --- 7. Display Options Function ---
-// Puts the generated choices onto the screen as buttons.
+// --- 9. Display Options Function ---
 function displayOptions(options, nameObject) {
     optionsAreaElement.innerHTML = ''; // Clear old options
     options.forEach(optionValue => {
         const button = document.createElement('button');
         button.classList.add('option-btn');
         
-        // If the option is an Arabic name, and the question asks for an Arabic name,
-        // we might want to display its transliteration too on the button for clarity.
         if (currentQuestionDetails.questionType === 'enToAr') {
-            // The optionValue here is an Arabic name. Find its object to get transliteration.
             const optionNameObject = anNamesOfAllah.find(n => n.arabic === optionValue);
             if (optionNameObject) {
                 button.textContent = `${optionNameObject.arabic} (${optionNameObject.transliteration})`;
@@ -289,15 +273,13 @@ function displayOptions(options, nameObject) {
     });
 }
 
-// --- 8. Handle Option Click Function ---
-// This is called when the user clicks an option button.
+// --- 10. Handle Option Click Function ---
 function handleOptionClick(event) {
     const selectedValue = event.target.dataset.value;
     checkAnswer(selectedValue);
 }
 
-// --- 9. Check Answer Function ---
-// Compares the selected answer with the correct one.
+// --- 11. Check Answer Function ---
 function checkAnswer(selectedValue) {
     let isCorrect = false;
     if (currentQuestionDetails.questionType === 'arToEn') {
@@ -327,16 +309,13 @@ function checkAnswer(selectedValue) {
     hintButtonElement.disabled = true;
 }
 
-// --- 10. Show Feedback Function ---
-// Tells the user if they were right or wrong.
+// --- 12. Show Feedback Function ---
 function showFeedback(isCorrect) {
     if (isCorrect) {
         feedbackTextElement.textContent = "Correct! Masha'Allah! 🎉";
         feedbackTextElement.style.color = 'green';
-        // score++; // If you add scoring
     } else {
         let correctAnswerDisplay = currentQuestionDetails.correctAnswer;
-        // If the correct answer was an Arabic name, find its object to show transliteration
         if (currentQuestionDetails.questionType === 'enToAr') {
             const correctNameObj = anNamesOfAllah.find(n => n.arabic === currentQuestionDetails.correctAnswer);
             if (correctNameObj) {
@@ -348,7 +327,7 @@ function showFeedback(isCorrect) {
     }
 }
 
-// --- 11. Next Question Button Event Listener ---
+// --- 13. Next Question Button Event Listener ---
 nextQuestionButtonElement.addEventListener('click', function() {
     if (questionCount < maxQuestions && availableNames.length > 0) {
         generateQuestion();
@@ -357,11 +336,10 @@ nextQuestionButtonElement.addEventListener('click', function() {
     }
 });
 
-// --- 12. Hint Button Event Listener ---
+// --- 14. Hint Button Event Listener ---
 hintButtonElement.addEventListener('click', showHint);
 
-// --- 13. Show Hint Function ---
-// Provides a hint to the user.
+// --- 15. Show Hint Function ---
 function showHint() {
     if (hintUsed || !currentQuestionDetails.correctAnswer) return;
 
@@ -391,7 +369,5 @@ function showHint() {
     hintButtonElement.disabled = true;
 }
 
-
-// --- 14. Initial Call to Start the Game ---
-// Let's get the quiz started when the page loads!
+// --- 16. Initial Call to Start the Game ---
 window.onload = startGame;
