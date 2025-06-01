@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>99 Names of Allah Quiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <header>
+            <h1>99 Names of Allah Quiz</h1>
+        </header>
+
+        <main>
+            <div id="status-area" style="display: flex; justify-content: space-between; margin-bottom: 1em;">
+                <span id="progress-text"></span>
+                <span id="score-text"></span>
+            </div>
+
+            <div id="question-area">
+                <p id="question-text">Question will appear here...</p>
+                <p id="transliteration-text" style="font-style: italic; color: #555;"></p>
+            </div>
+
+            <div id="options-area">
+                {/* Options will be dynamically added here by JavaScript */}
+                {/* Example: <button class="option-btn">Option 1</button> */}
+            </div>
+
+            <div id="feedback-area">
+                <p id="feedback-text"></p>
+            </div>
+
+            <div id="controls-area">
+                <button id="hint-btn">Hint</button>
+                <button id="next-question-btn">Next Question</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>Barak Allahu feekum!</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
